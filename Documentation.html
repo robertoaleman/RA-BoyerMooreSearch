@@ -1,0 +1,167 @@
+<h2>Documentation</h2>
+<h3 class=""><code>createBadCharacterTable(string $pattern): array</code></h3>
+<p class="">Creates the "bad character" table used by the Boyer-Moore algorithm. This table stores the last occurrence of each character in the pattern.</p>
+<p class=""><strong>Parameters:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>$pattern</code> (<code>string</code>): The search pattern.</li>
+</ul>
+<p class=""><strong>Return Value:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>array</code>: An associative array where the keys are the characters in the pattern and the values are their last positions in the pattern.</li>
+</ul>
+<p class=""><strong>Internal Use:</strong> This method is called internally by <code>boyerMooreSearch</code>.</p>
+
+<h3 class=""><code>createGoodSuffixTable(string $pattern): array</code></h3>
+<p class="">Creates the "good suffix" table used by the Boyer-Moore algorithm. This table determines how much the pattern can be shifted to the right based on the matching of a suffix of the pattern.</p>
+<p class=""><strong>Parameters:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>$pattern</code> (<code>string</code>): The search pattern.</li>
+</ul>
+<p class=""><strong>Return Value:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>array</code>: An array where the indices represent the length of the matched suffix and the values represent the number of positions to shift the pattern.</li>
+</ul>
+<p class=""><strong>Internal Use:</strong> This method is called internally by <code>boyerMooreSearch</code>.</p>
+
+<h3 class=""><code>getLastPrefixPosition(string $pattern): array</code></h3>
+<p class="">Helper function for <code>createGoodSuffixTable</code>. Gets the length of the longest border of the suffix of the pattern that is also a prefix of the pattern.</p>
+<p class=""><strong>Parameters:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>$pattern</code> (<code>string</code>): The search pattern.</li>
+</ul>
+<p class=""><strong>Return Value:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>array</code>: An array containing the length of the longest prefix for each suffix of the pattern.</li>
+</ul>
+<p class=""><strong>Internal Use:</strong> This method is called internally by <code>createGoodSuffixTable</code>.</p>
+
+<h3 class=""><code>getBorderLength(string $pattern): array</code></h3>
+<p class="">Helper function for <code>createGoodSuffixTable</code> and <code>getLastPrefixPosition</code>. Calculates the border length for each prefix of the pattern.</p>
+<p class=""><strong>Parameters:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>$pattern</code> (<code>string</code>): The search pattern.</li>
+</ul>
+<p class=""><strong>Return Value:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>array</code>: An array where index <code>i</code> contains the length of the border of the prefix of length <code>i</code>.</li>
+</ul>
+<p class=""><strong>Internal Use:</strong> This method is called internally by <code>createGoodSuffixTable</code> and <code>getLastPrefixPosition</code>.</p>
+
+<h3 class=""><code>basicSearch(string $text, string $pattern): int|false</code></h3>
+<p class="">Performs a basic string search using PHP's native <code>strpos</code> function. It is mainly used for performance comparison with the Boyer-Moore algorithm.</p>
+<p class=""><strong>Parameters:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>$text</code> (<code>string</code>): The complete text where the search will be performed.</li>
+ 	<li class=""><code>$pattern</code> (<code>string</code>): The pattern to search for within the text.</li>
+</ul>
+<p class=""><strong>Return Value:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>int</code>: The position of the first occurrence of the <code>$pattern</code> in the <code>$text</code>.</li>
+ 	<li class=""><code>false</code>: If the <code>$pattern</code> is not found in the <code>$text</code>.</li>
+</ul>
+<p class=""><strong>Example:</strong></p>
+
+<div class="">
+<div class="">
+<div class="">
+<pre class=""><code class="" role="text" data-test-id="code-content"><span class="">$searcher</span> = <span class="">new</span> BoyerMooreSearch();
+<span class="">$text</span> = <span class="">"This is an example text to search for a pattern."</span>;
+<span class="">$pattern</span> = <span class="">"example"</span>;
+<span class="">$index</span> = <span class="">$searcher</span>-&gt;basicSearch(<span class="">$text</span>, <span class="">$pattern</span>);
+
+<span class="">if</span> (<span class="">$index</span> !== <span class="">false</span>) {
+    <span class="">echo</span> <span class="">"Pattern found at position: "</span> . <span class="">$index</span>; <span class="">// Output: Pattern found at position: 21</span>
+} <span class="">else</span> {
+    <span class="">echo</span> <span class="">"Pattern not found."</span>;
+}
+</code></pre>
+</div>
+</div>
+</div>
+<h3 class=""><code>readFileContent(string $filePath): string|false</code></h3>
+<p class="">Reads the content of a text file specified by its path.</p>
+<p class=""><strong>Parameters:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>$filePath</code> (<code>string</code>): The path to the text file.</li>
+</ul>
+<p class=""><strong>Return Value:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>string</code>: The content of the file as a string.</li>
+ 	<li class=""><code>false</code>: If the file does not exist or cannot be read.</li>
+</ul>
+<p class=""><strong>Internal Use:</strong> This method is called internally by <code>compareSearchMethods</code>.</p>
+
+<h3 class=""><code>compareSearchMethods(string $filePath, string $pattern): array</code></h3>
+<p class="">Compares the execution time of the Boyer-Moore algorithm implemented in this class with the basic search function (<code>basicSearch</code>) for a given pattern in a text file.</p>
+<p class=""><strong>Parameters:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>$filePath</code> (<code>string</code>): The path to the text file where the search will be performed.</li>
+ 	<li class=""><code>$pattern</code> (<code>string</code>): The pattern to search for.</li>
+</ul>
+<p class=""><strong>Return Value:</strong></p>
+
+<ul class="">
+ 	<li class=""><code>array</code>: An associative array with the comparison results, including:
+<ul class="">
+ 	<li class=""><code>pattern</code>: The searched pattern.</li>
+ 	<li class=""><code>file</code>: The path of the analyzed file.</li>
+ 	<li class=""><code>boyerMoore</code>: An array with information about the Boyer-Moore search (<code>found</code>, <code>index</code>, <code>time</code>).</li>
+ 	<li class=""><code>basicSearch</code>: An array with information about the basic search (<code>found</code>, <code>index</code>, <code>time</code>).</li>
+ 	<li class=""><code>error</code>: If an error occurs while reading the file, it will contain the error message.</li>
+</ul>
+</li>
+</ul>
+<p class=""><strong>Example:</strong></p>
+
+<div class="">
+<div class="">
+<div class="">
+<pre class=""><code class="" role="text" data-test-id="code-content"><span class="">$searcher</span> = <span class="">new</span> BoyerMooreSearch();
+<span class="">$filePath</span> = <span class="">'large_text_file.txt'</span>;
+<span class="">$patternToSearch</span> = <span class="">'keyword'</span>;
+<span class="">$comparisonResults</span> = <span class="">$searcher</span>-&gt;compareSearchMethods(<span class="">$filePath</span>, <span class="">$patternToSearch</span>);
+
+<span class="">if</span> (<span class="">isset</span>(<span class="">$comparisonResults</span>[<span class="">'error'</span>])) {
+    <span class="">echo</span> <span class="">"Error: "</span> . <span class="">$comparisonResults</span>[<span class="">'error'</span>];
+} <span class="">else</span> {
+    print_r(<span class="">$comparisonResults</span>);
+}
+</code></pre>
+</div>
+</div>
+</div>
+<h2 class="">Usage Example</h2>
+<p class="">The example script provided at the end of the class code demonstrates how to instantiate the <code>BoyerMooreSearch</code> class, define the path to a text file and a search pattern, and then use the <code>compareSearchMethods</code> method to analyze the performance of both search algorithms. It also includes the optional generation of a large text file for testing purposes.</p>
+<p class="">To use the class, simply include the PHP file in your project and create an instance of <code>BoyerMooreSearch</code>. Then, you can call its methods as needed. For example, to perform a Boyer-Moore search directly:</p>
+
+<div class="">
+<div class="">
+<div class="">
+<pre class=""><code class="" role="text" data-test-id="code-content"><span class="">require_once</span> <span class="">'BoyerMooreSearch.php'</span>; <span class="">// Ensure the path to the file is correct</span>
+
+<span class="">$searcher</span> = <span class="">new</span> BoyerMooreSearch();
+<span class="">$text</span> = <span class="">"A text where we are looking for something specific."</span>;
+<span class="">$pattern</span> = <span class="">"specific"</span>;
+<span class="">$index</span> = <span class="">$searcher</span>-&gt;boyerMooreSearch(<span class="">$text</span>, <span class="">$pattern</span>);
+
+<span class="">if</span> (<span class="">$index</span> !== <span class="">false</span>) {
+    <span class="">echo</span> <span class="">"The pattern was found at index: "</span> . <span class="">$index</span> . <span class="">"\n"</span>;
+} <span class="">else</span> {
+    <span class="">echo</span> <span class="">"The pattern was not found.\n"</span>;
+}</code></pre>
+</div>
+</div>
+</div>
